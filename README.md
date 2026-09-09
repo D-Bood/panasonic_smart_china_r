@@ -188,6 +188,25 @@ token = sha512(f"{inner}_{suffix}")
 
 ---
 
+## 项目范围与社区扩展
+
+本项目专注于**新风换气机**，外加从上游项目继承并持续维护的**中央空调**。
+
+松下智家 App 下每条产品线、每个系列的云端端点、字段名和值域都不一样，逆向出来的协议只有拿对应机型的真机才能验证。维护者手上只有新风设备，所以：
+
+- **新风（`0800` / `0850`）和中央空调（`0900`）**：正常受理 issue 和 PR，会验证、会修、会跟着发版。
+- **其他品类**（冰箱、洗衣机、空气净化器、微波炉等）：欢迎交流协议逆向的经验和思路，但不合并进主干。原因是维护者没有设备，既验证不了正确性，出问题也修不了——而这类集成下发的是真实的设备控制命令，判断错误的代价不是显示上少个数字。
+
+如果你已经把某个品类做出来了，**建议以独立仓库的形式发布**：本项目是 MIT 许可，登录算法、token 生成、coordinator 骨架都可以直接 fork 复用，不需要事先征求同意。你自己发 release、自己定节奏，用户也能直接把它加成 HACS 自定义仓库装上。做好之后开一个 issue 告诉我，我会在下面的列表里链接推荐，并把相应品类的 issue 引导过去。
+
+### 社区扩展项目
+
+| 品类 | 仓库 | 状态 |
+|------|------|------|
+| 冰箱（category `0100`） | 待建立 | 已有两份独立的实机适配（[#12](https://github.com/rudyll/panasonic_smart_china_r/pull/12) W472 / Fridge-42、[#15](https://github.com/rudyll/panasonic_smart_china_r/pull/15) NR-W461BF-TC），欢迎两位作者联合发布独立仓库 |
+
+---
+
 ## 其他设备型号
 
 | 设备类型 | Category | 状态 | 说明 |
@@ -202,7 +221,7 @@ token = sha512(f"{inner}_{suffix}")
 | 空气净化器（Aircle） | 0830 | 🔍 待开发 | [issue #3](https://github.com/rudyll/panasonic_smart_china_r/issues/3) |
 | 其他 0900 空调控制器 | 0900 | 🔍 征集数据 | [issue #7](https://github.com/rudyll/panasonic_smart_china_r/issues/7) |
 
-如果你的松下设备不在以上列表，可参考 [Wiki：如何适配新设备](https://github.com/rudyll/panasonic_smart_china_r/wiki/适配新设备型号) 自行逆向并提交 PR。
+如果你的松下设备不在以上列表，可参考 [Wiki：如何适配新设备](https://github.com/rudyll/panasonic_smart_china_r/wiki/适配新设备型号) 自行逆向。新风和空调之外的品类，提交前请先看上面的[项目范围与社区扩展](#项目范围与社区扩展)。
 
 ### 提供脱敏设备报告
 
