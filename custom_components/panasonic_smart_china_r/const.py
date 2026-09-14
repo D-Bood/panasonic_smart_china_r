@@ -30,12 +30,31 @@ AUTH_EXPIRED_ERROR_CODES = {"3003", "3004", "4102"}
 # deviceId 中间段的 category 码
 CATEGORY_AC = "0900"
 CATEGORY_FRESH_AIR = {"0800", "0850"}  # 0850 = SmallERV 小型新风
+CATEGORY_FRIDGE = "0100"
 
 DEVICE_KIND_AC = "ac"
 DEVICE_KIND_FRESH_AIR = "fresh_air"
+DEVICE_KIND_FRIDGE = "fridge"
 
 
 _BASE_URL = "https://app.psmartcloud.com/App/"
+
+
+# 冰箱走独立的 FDev* 协议家族，与新风机/空调的 ADev* 完全不同：
+# GET/SET 协议都从松下官方 Web 控制页（https://app.psmartcloud.com/ca/cn/0100/<devSubTypeId>/index.html）
+# 的 JS 源码逆向确认（2026-08-22，devSubTypeId=Fridge-42 实测）。
+#
+# 曾对照独立实现 https://github.com/mcdona1d/panasonic_smart_china/pull/12
+# （该作者对他自己的冰箱做过真实抓包）怀疑 SET 端点应该带 Mqtt 后缀，短暂改用过
+# FDevSetStatusInfoMqtt。但实测发现该端点返回的是空壳成功（无 results/todoId），
+# 真正改变字段值后完全不生效；而 Web 页 JS 调用的 FDevSetStatusInfo 会返回
+# {"results":{"todoId":N}}，且真实改了 nanoe 字段并在约 5-10 秒后在 GET 响应里
+# 观察到生效——已改回来。Mqtt 后缀大概率是对方那台不同硬件/固件版本冰箱专属的
+# 端点，并非本设备（Fridge-42）通用。
+FDEV_GET_STATUS_URL = _BASE_URL + "FDevGetStatusInfo"
+FDEV_SET_STATUS_URL = _BASE_URL + "FDevSetStatusInfo"
+FDEV_GET_ALARM_URL = _BASE_URL + "FDevGetAlarmInfo"
+
 
 # devSubTypeId 前缀 → (GET端点完整URL, SET端点完整URL)
 _DCERV_ENDPOINT_MAP: dict[str, tuple[str, str]] = {
@@ -71,6 +90,8 @@ def detect_device_kind(device_id: str) -> str | None:
         return DEVICE_KIND_AC
     if cat in CATEGORY_FRESH_AIR:
         return DEVICE_KIND_FRESH_AIR
+    if cat == CATEGORY_FRIDGE:
+        return DEVICE_KIND_FRIDGE
     return None
 
 # 自定义风速常量
