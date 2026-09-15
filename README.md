@@ -1,3 +1,6 @@
+# 该仓库修改于[@cliffchen](https://github.com/cliffchen)的[Pull Request](https://github.com/rudyll/panasonic_smart_china_r/pull/12)，感谢！
+
+
 # Panasonic Smart China R
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
